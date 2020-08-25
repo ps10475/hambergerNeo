@@ -1,0 +1,36 @@
+.Burger{
+    width: 100%;
+    height: 258px;
+    margin: auto;
+    overflow: auto ;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+@media (min-width: 500px) and (min-height:400px) {
+    .Burger {
+        width: 350px;
+        height: 300px;
+    }
+}
+ 
+/* width */
+::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: rgb(255, 222, 178);
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: rgb(255, 155, 25);
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(165, 93, 0);
+  }
+  
