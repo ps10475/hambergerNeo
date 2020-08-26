@@ -8,13 +8,12 @@ const OrderSummary = (props) => {
         .map(igKey => {
             return <li key={igKey} > <span> {igKey} </span> : {ingredients[igKey]} </li>
         })
-
     return (
         <Aux>
             <h3>Đơn hàng:</h3>
             <p>Tổng các phần mà bạn đã đặt là:</p>
             <ul>
-                { ingredientLi }
+                {ingredientLi}
             </ul>
             <p>Thành tiền: <b> {props.totalPrice.toLocaleString("zh-HK")} VNĐ </b> </p>
             <p>Bạn đã sẵn sàng thưởng thức hương vị ngon tuyệt của bánh chưa?</p>

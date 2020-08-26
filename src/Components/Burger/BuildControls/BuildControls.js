@@ -10,7 +10,6 @@ const controls = [
 ]
 const BuildControls = (props) => {
     let price = props.totalPrice.toLocaleString("zh-HK");
-    console.log(!props.purchasable);
     return (
         <div className={classes.BuildControls}>
             <p className={classes.TotalPrice}> Tổng tiền: { price } VNĐ </p>
