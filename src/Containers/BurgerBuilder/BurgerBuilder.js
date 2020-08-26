@@ -30,11 +30,16 @@ class BurgerBuilder extends Component {
             purchasing : true
         })
     }
-    closeModalHandle = () =>{
+    closePurchaseHandle = () =>{
         this.setState({
             purchasing : false
         })
     }
+
+    continuePurchaseHandle = () => {
+        alert('Continue Purchase')
+    }
+    
 
     purchasableActive = (ingredients) => {
         let sum = Object.keys(ingredients)
@@ -92,8 +97,12 @@ class BurgerBuilder extends Component {
         }
         return (
             <Aux>
-                <Modal show={this.state.purchasing} closeModal={this.closeModalHandle}>
-                    <OrderSummary ingredients = {this.state.ingredients}/>
+                <Modal show={this.state.purchasing} closePurchase={this.closePurchaseHandle}>
+                    <OrderSummary 
+                        ingredients = {this.state.ingredients}
+                        closePurchase = {this.closePurchaseHandle}
+                        continuePurchase = {this.continuePurchaseHandle}
+                        totalPrice = {this.state.totalPrice} />
                 </Modal>
                 <Burger ingredients = {this.state.ingredients} />
                 <BuildControls 

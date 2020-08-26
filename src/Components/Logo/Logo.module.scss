@@ -1,0 +1,15 @@
+.Logo{
+    background-color: white;
+    height: 80%;
+    padding: 5px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    &>img{
+        height: 100%;
+    } 
+
+    &.Sidedraw{
+        height: 8%;
+        padding: 20px;
+    } 
+}

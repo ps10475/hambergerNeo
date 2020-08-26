@@ -1,11 +1,12 @@
 import React from 'react';
 import Aux from '../../../HOC/Auxx';
+import Button from '../../UI/Button/Button';
 
 const OrderSummary = (props) => {
     const ingredients = props.ingredients;
     let ingredientLi = Object.keys(ingredients)
         .map(igKey => {
-            return <li> <span> {igKey} </span> : {ingredients[igKey]} </li>
+            return <li key={igKey} > <span> {igKey} </span> : {ingredients[igKey]} </li>
         })
 
     return (
@@ -15,7 +16,10 @@ const OrderSummary = (props) => {
             <ul>
                 { ingredientLi }
             </ul>
-            <p>Thành phần trong bánh đã đúng chưa?</p>
+            <p>Thành tiền: <b> {props.totalPrice.toLocaleString("zh-HK")} VNĐ </b> </p>
+            <p>Bạn đã sẵn sàng thưởng thức hương vị ngon tuyệt của bánh chưa?</p>
+            <Button btnType='Danger' clicked={props.closePurchase} >Hủy</Button>
+            <Button btnType='Success' clicked={props.continuePurchase} >Tiếp tục</Button>
         </Aux>
     );
 }

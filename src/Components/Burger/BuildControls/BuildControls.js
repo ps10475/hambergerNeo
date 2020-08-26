@@ -9,7 +9,7 @@ const controls = [
     { label: 'Cheese', type: 'Cheese' }
 ]
 const BuildControls = (props) => {
-    var price = props.totalPrice.toLocaleString("zh-HK");
+    let price = props.totalPrice.toLocaleString("zh-HK");
     console.log(!props.purchasable);
     return (
         <div className={classes.BuildControls}>
