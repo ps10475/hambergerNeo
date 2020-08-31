@@ -1,0 +1,38 @@
+.Input{
+    margin: 20px 0; 
+    .Label{
+        font-weight: bold;
+    }
+    & input {
+        display: block ;
+        margin : 10px auto;
+        padding: 15px;
+        width: 90%;
+        border: 1px solid #ccc; 
+        outline: none;
+        background: rgb(255, 249, 239);
+        box-sizing: border-box;
+        &:focus{
+            background: rgb(255, 236, 202);
+         
+        }
+        @media (min-width:500px){
+            width: 40%;
+        }
+    }
+    & select{
+        margin-left: 20px;
+        padding: 5px;
+    }
+    
+}
+.InValid{
+    & input{
+        border-color: crimson;
+        background-color: #e6ff78
+    }
+}
+.ValidMessage{
+    font-size: 0.8em;
+    color: red; 
+}

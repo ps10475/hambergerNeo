@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import classes from './Burger.module.scss';
 import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
+import PropTypes from 'prop-types';
 
 class Burger extends Component {
     render() {
@@ -26,6 +27,15 @@ class Burger extends Component {
             </div>
         );
     }
+}
+
+Burger.propTypes = {
+    ingredients: PropTypes.shape({
+        Meat: PropTypes.number,
+        Bacon: PropTypes.number,
+        Salad: PropTypes.number,
+        Cheese: PropTypes.number, 
+    })
 }
 
 export default Burger;
