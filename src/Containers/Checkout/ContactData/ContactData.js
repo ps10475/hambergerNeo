@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import * as actionTypes from '../../../Store/actionTypes'
 import classes from './ContactData.module.scss';
 import Button from '../../../Components/UI/Button/Button';
 import axios from '../../../axionOrder';
@@ -22,9 +23,9 @@ class ContactData extends Component {
                     minLength: 3,
                     maxLength: 8
                 },
-                valid : false,
+                valid: false,
                 touch: false,
-                validMessage:'Nhập từ 3 đến 8 ký tự'
+                validMessage: 'Nhập từ 3 đến 8 ký tự'
             },
             email: {
                 elementType: 'input',
@@ -38,7 +39,7 @@ class ContactData extends Component {
                     required: true,
                     email: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+.[a-z]{2,4}/
                 },
-                valid : false,
+                valid: false,
                 touch: false,
                 validMessage: "Nhập đúng định dạng email"
             },
@@ -55,9 +56,9 @@ class ContactData extends Component {
                     minLength: 3,
                     maxLength: 8
                 },
-                valid : false,
+                valid: false,
                 touch: false,
-                validMessage:"Nhập từ 3 đến 8 ký tự"
+                validMessage: "Nhập từ 3 đến 8 ký tự"
             },
             deliveryMethod: {
                 elementType: 'select',
@@ -73,27 +74,27 @@ class ContactData extends Component {
                 validation: {
                     required: true,
                 },
-                valid : false,
+                valid: false,
                 touch: false,
-                validMessage:"Chọn 1 trong các lựa chọn"
+                validMessage: "Chọn 1 trong các lựa chọn"
             }
         },
         formValid: false,
         loading: false,
     }
 
-    checkValidity = (value,rules) => {
+    checkValidity = (value, rules) => {
         let isValid = true;
-        if(rules&&rules.required){
+        if (rules && rules.required) {
             isValid = value.trim() !== '' && isValid;
         }
-        if(rules&&rules.minLength){
+        if (rules && rules.minLength) {
             isValid = value.length >= rules.minLength && isValid;
         }
-        if(rules&&rules.maxLength){
+        if (rules && rules.maxLength) {
             isValid = value.length <= rules.maxLength && isValid;
         }
-        if(rules&&rules.email){
+        if (rules && rules.email) {
             isValid = rules.email.test(value) && isValid;
         }
         return isValid;
@@ -104,10 +105,10 @@ class ContactData extends Component {
         updateForm[changeTarget].value = event.target.value;
         const value = updateForm[changeTarget].value;
         const rules = updateForm[changeTarget].validation;
-        updateForm[changeTarget].valid = this.checkValidity(value,rules);
+        updateForm[changeTarget].valid = this.checkValidity(value, rules);
         updateForm[changeTarget].touch = true;
         let updateFormValid = true;
-        for (let key in updateForm){
+        for (let key in updateForm) {
             updateFormValid = updateForm[key].valid && updateFormValid;
         }
         this.setState({ orderForm: updateForm, formValid: updateFormValid })
@@ -130,6 +131,7 @@ class ContactData extends Component {
             .then(res => {
                 console.log(res);
                 this.setState({ loading: false });
+                this.props.resetAll();
                 this.props.history.push('/')
             }).catch(error => {
                 this.setState({ loading: false })
@@ -155,9 +157,9 @@ class ContactData extends Component {
                             value={formElement.config.value}
                             label={formElement.config.label}
                             changed={(event) => this.changeHanle(event, formElement.id)}
-                            inValid = {!formElement.config.valid}
+                            inValid={!formElement.config.valid}
                             touch={formElement.config.touch}
-                            validMessage= {formElement.config.validMessage} />
+                            validMessage={formElement.config.validMessage} />
                     )
                 })}
                 <Button btnType="Success" disabled={!this.state.formValid}> ĐẶT HÀNG </Button>
@@ -175,10 +177,15 @@ class ContactData extends Component {
 }
 
 const mapStateToProps = state => {
-    return{
+    return {
         ingredients: state.ingredients,
         totalPrice: state.totalPrice
     }
 }
+const mapDispatchToProps = dispatch => {
+    return {
+        resetAll: () => dispatch({ type: actionTypes.RESET_INGREDIENT })
+    }
+}
 
-export default connect(mapStateToProps )(ContactData);
+export default connect(mapStateToProps, mapDispatchToProps)(ContactData);
