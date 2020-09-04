@@ -14,11 +14,9 @@ class Burger extends Component {
             .reduce((combinedArray, el) => {
                 return combinedArray.concat(el)
             }, []);
-        // console.log(this.props.ingredients);
         if (transformedIngredients.length === 0) {
             transformedIngredients = <p>Hãy chọn thành phần burger !!!</p>
         }
-        // console.log(this.transformedIngredients);
         return (
             <div className={classes.Burger}>
                 <BurgerIngredient type='BreadTop' />

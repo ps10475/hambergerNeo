@@ -58,7 +58,6 @@ export const auth = (email, password, isSignin) => {
                 dispatch(checkAuthTimeout(response.data.expiresIn * 1000));
             })
             .catch(error => {
-                console.log(error.response.data.error.message);
                 dispatch(authFail(error.response.data.error.message))
             })
     }
