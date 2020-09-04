@@ -8,11 +8,11 @@ const CheckoutSummary = (props) => {
         <div style={{ textAlign: 'center' }}>
             <h1>Chúc bạn ngon miệng</h1>
             <Burger ingredients={props.ingredients} />
-            <div style={{boxShadow:'0 0 3px rgba(0,0,0,0.1)'}}>
+            <div >
                 <Button 
                     btnType='Danger'
                     clicked={props.cancelCheckout}
-                >HỦY</Button>
+                >Trở lại</Button>
                 <Button 
                     btnType='Success' 
                     clicked={props.continueCheckout}

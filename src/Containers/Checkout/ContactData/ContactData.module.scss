@@ -4,5 +4,8 @@
     margin: 30px auto;
     padding: 20px  ;
     box-shadow: 2px 2px 6px #ccc;
-     
+    & h1{
+        background-color: #ff9b19;
+        padding: 10px 0;
+    }
 }

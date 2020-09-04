@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as actionTypes from '../../../Store/actionTypes'
 import classes from './ContactData.module.scss';
 import Button from '../../../Components/UI/Button/Button';
 import axios from '../../../axionOrder';
 import Spinner from '../../../Components/UI/Spinner/Spinner';
 import Input from '../../../Components/UI/Input/Input';
+import catchErrorAxios from '../../../HOC/catchErrorAxios'
+import * as actionCreator from '../../../Store/Action/actionRoot';
 
 class ContactData extends Component {
     state = {
@@ -79,8 +80,7 @@ class ContactData extends Component {
                 validMessage: "Chọn 1 trong các lựa chọn"
             }
         },
-        formValid: false,
-        loading: false,
+        formValid: false
     }
 
     checkValidity = (value, rules) => {
@@ -101,42 +101,45 @@ class ContactData extends Component {
     }
 
     changeHanle = (event, changeTarget) => {
-        const updateForm = { ...this.state.orderForm };
-        updateForm[changeTarget].value = event.target.value;
-        const value = updateForm[changeTarget].value;
-        const rules = updateForm[changeTarget].validation;
-        updateForm[changeTarget].valid = this.checkValidity(value, rules);
-        updateForm[changeTarget].touch = true;
+        const updateForm = {
+            ...this.state.orderForm,
+            [changeTarget] : {
+                ...this.state.orderForm[changeTarget],
+                value: event.target.value,
+                valid: this.checkValidity(event.target.value, this.state.orderForm[changeTarget].validation),
+                touch: true
+            }
+        }
+        // const updateForm = { ...this.state.orderForm };
+        // updateForm[changeTarget].value = event.target.value;
+        // const value = updateForm[changeTarget].value;
+        // const rules = updateForm[changeTarget].validation;
+        // updateForm[changeTarget].valid = this.checkValidity(value, rules);
+        // updateForm[changeTarget].touch = true;
         let updateFormValid = true;
-        for (let key in updateForm) {
-            updateFormValid = updateForm[key].valid && updateFormValid;
+        for (let k in updateForm) {
+            updateFormValid = updateForm[k].valid && updateFormValid;
         }
         this.setState({ orderForm: updateForm, formValid: updateFormValid })
     }
 
     orderHandle = (e) => {
         e.preventDefault();
-        this.setState({ loading: true })
+        // this.setState({ loading: true })
         let orderData = {};
         for (let key in this.state.orderForm) {
             orderData[key] = this.state.orderForm[key].value;
         }
+        console.log(this.props.userId);
         const data = {
             ingredients: this.props.ingredients,
             totalPrice: this.props.totalPrice,
             orderData: orderData,
-            createAt: new Date()
+            createAt: new Date(),
+            userId: this.props.userId
         }
-        axios.post('/order.json', data)
-            .then(res => {
-                console.log(res);
-                this.setState({ loading: false });
-                this.props.resetAll();
-                this.props.history.push('/')
-            }).catch(error => {
-                this.setState({ loading: false })
-                console.log(error);
-            })
+
+        this.props.sendOrderPurchase(data);
     }
     render() {
         let formElementArray = [];
@@ -164,7 +167,7 @@ class ContactData extends Component {
                 })}
                 <Button btnType="Success" disabled={!this.state.formValid}> ĐẶT HÀNG </Button>
             </form>)
-        if (this.state.loading) {
+        if (this.props.loading) {
             form = <Spinner />
         }
         return (
@@ -178,14 +181,16 @@ class ContactData extends Component {
 
 const mapStateToProps = state => {
     return {
-        ingredients: state.ingredients,
-        totalPrice: state.totalPrice
+        ingredients: state.burgerBuilder.ingredients,
+        totalPrice: state.burgerBuilder.totalPrice,
+        loading: state.order.loading,
+        userId: state.auth.userId
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
-        resetAll: () => dispatch({ type: actionTypes.RESET_INGREDIENT })
+        sendOrderPurchase: (orderData) => dispatch(actionCreator.sendPurchaseBurger(orderData))
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContactData);
+export default connect(mapStateToProps, mapDispatchToProps)(catchErrorAxios(ContactData, axios));

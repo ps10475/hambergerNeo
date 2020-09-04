@@ -6,8 +6,15 @@ const NavigationItems = (props) => {
     return (
         <ul className={classes.NavigationItems}>
             <NavigationItem link='/'>Mua Burger</NavigationItem>
-            <NavigationItem link='/orders' >Kiểm hàng</NavigationItem> 
-        </ul>
+            {props.isAuth ? <NavigationItem link='/orders' >Kiểm hàng</NavigationItem> : null}
+            {props.isAuth ?
+                (
+                    <NavigationItem link='/logout' >Logout</NavigationItem>
+                ) : (
+                    <NavigationItem link='/auth' >Auth</NavigationItem>)
+            }
+
+        </ul >
     );
 }
 

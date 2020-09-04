@@ -17,7 +17,7 @@ const OrderSummary = (props) => {
             </ul>
             <p>Thành tiền: <b> {props.totalPrice.toLocaleString("zh-HK")} VNĐ </b> </p>
             <p>Bạn đã sẵn sàng thưởng thức hương vị ngon tuyệt của bánh chưa?</p>
-            <Button btnType='Danger' clicked={props.closePurchase} >Hủy</Button>
+            <Button btnType='Danger' clicked={props.closePurchase} >Trở lại</Button>
             <Button btnType='Success' clicked={props.continuePurchase} >Tiếp tục</Button>
         </Aux>
     );

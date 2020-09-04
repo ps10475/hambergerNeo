@@ -10,7 +10,7 @@ const Navigation = (props) => {
             <DrawToggle clicked={ props.sideDrawToggle } >Menu</DrawToggle>
             <Logo type='Navigation' />
             <nav className={classes.displayNoneNav}>
-                <NavigationItems />
+                <NavigationItems isAuth={props.isAuth} />
             </nav>
         </div>
     );

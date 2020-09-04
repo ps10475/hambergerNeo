@@ -8,20 +8,28 @@ import OrderSummary from '../../Components/Burger/OrderSummary/OrderSummary';
 import axios from '../../axionOrder';
 import Spinner from '../../Components/UI/Spinner/Spinner';
 import catchErrorAxios from '../../HOC/catchErrorAxios';
-import * as actionTypes from '../../Store/actionTypes';
+import * as actions from '../../Store/Action/actionRoot'
+
 
 
 class BurgerBuilder extends Component {
     state = {
         purchasing: false,
-        loading: false,
-        error: false
+    }
+
+    componentDidMount() {
+        if (!this.props.building || !this.props.isAuth ) {
+            this.props.setInitIngredient();
+        }
     }
 
     purchasingHandle = () => {
-        this.setState({
-            purchasing: true
-        })
+        if (this.props.isAuth) {
+            this.setState({ purchasing: true })
+        } else {
+            this.props.setRedirectPath('/checkout');
+            this.props.history.push('/auth');
+        }
     }
     closePurchaseHandle = () => {
         this.setState({
@@ -30,6 +38,7 @@ class BurgerBuilder extends Component {
     }
 
     continuePurchaseHandle = () => {
+        this.props.purchasedInit()
         this.props.history.push('/checkout')
     }
 
@@ -44,24 +53,20 @@ class BurgerBuilder extends Component {
         return sum > 0
     }
 
-    render() {
-        let result = <p>Không thể tải dữ liệu từ firebase</p>
-
-        if (!this.state.error) {
+    render() { 
+        let result = <Spinner />;
+        if (this.props.ingredients) {
             let disableBtn = { ...this.props.ingredients }
             for (let key in disableBtn) {
                 disableBtn[key] = disableBtn[key] <= 0;
             }
-            let orderSummary = this.state.loading ?
-                (
-                    <Spinner />
-                ) : (
-                    <OrderSummary
-                        ingredients={this.props.ingredients}
-                        closePurchase={this.closePurchaseHandle}
-                        continuePurchase={this.continuePurchaseHandle}
-                        totalPrice={this.props.totalPrice} />
-                )
+            let orderSummary = (
+                <OrderSummary
+                    ingredients={this.props.ingredients}
+                    closePurchase={this.closePurchaseHandle}
+                    continuePurchase={this.continuePurchaseHandle}
+                    totalPrice={this.props.totalPrice} />
+            )
             result =
                 <Aux>
                     <Modal show={this.state.purchasing} closePurchase={this.closePurchaseHandle}>
@@ -74,27 +79,36 @@ class BurgerBuilder extends Component {
                         disableBtn={disableBtn}
                         totalPrice={this.props.totalPrice}
                         purchasable={this.purchasableActive(this.props.ingredients)}
-                        purchasing={this.purchasingHandle} />
+                        purchasing={this.purchasingHandle}
+                        isAuth={this.props.isAuth} />
                 </Aux>
-
         }
-        return (
-            result
-        );
+
+        if (this.props.error) {
+            result = <p>Có lỗi load trang</p>
+        }
+        return result;
     }
 }
 
 const mapStateToProps = state => {
     return {
-        ingredients: state.ingredients,
-        totalPrice: state.totalPrice
+        ingredients: state.burgerBuilder.ingredients,
+        totalPrice: state.burgerBuilder.totalPrice,
+        error: state.burgerBuilder.error,
+        isAuth: state.auth.token !== null,
+        building: state.burgerBuilder.building,
+        redirectPath: state.auth.redirectPath
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        addIngredient: (name) => dispatch({ type: actionTypes.ADD_INGREDIENT, ingredientName: name }),
-        removeIngredient: (name) => dispatch({ type: actionTypes.REMOVE_INGREDIENT, ingredientName: name })
+        addIngredient: (name) => dispatch(actions.addIngredient(name)),
+        removeIngredient: (name) => dispatch(actions.removeIngredient(name)),
+        setInitIngredient: () => dispatch(actions.initIngredient()),
+        purchasedInit: () => dispatch(actions.purchaseBurgerInit()),
+        setRedirectPath: (path) => dispatch(actions.setRedirectPath(path))
     }
 }
 
