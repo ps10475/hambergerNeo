@@ -1,15 +1,16 @@
-import React, { Component } from 'react';
+import React, { Component, lazy, Suspense } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 // add component
 import Layout from './Components/Layout/Layout';
-import BurgerBuilder from './Containers/BurgerBuilder/BurgerBuilder';
 import Checkout from './Containers/Checkout/Checkout';
-
-import Orders from './Containers/Orders/Orders';
-import Auth from './Containers/Auth/Auth';
 import Logout from './Containers/Auth/Logout';
 import * as actions from './Store/Action/actionRoot';
+import asyncComponent from './HOC/asyncComponent';
+
+const BurgerBuilder = lazy(()=> import('./Containers/BurgerBuilder/BurgerBuilder'))
+const Orders = lazy(()=> import('./Containers/Orders/Orders'));
+const Auth = asyncComponent(() => import('./Containers/Auth/Auth'))
 
 class App extends Component {
   componentDidMount() {
@@ -34,11 +35,13 @@ class App extends Component {
         </Switch>
     }
     return (
-      <div>
-        <Layout>
-          {routes}
-        </Layout>
-      </div>
+      <Suspense fallback={<div>loading...</div>} >
+        <div>
+          <Layout>
+            {routes}
+          </Layout>
+        </div>
+      </Suspense>
     );
   }
 }
