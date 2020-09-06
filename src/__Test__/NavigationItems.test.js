@@ -21,8 +21,4 @@ describe('Check <NavigationItems/>', () => {
         warpper.setProps({ isAuth: true });
         expect(warpper.find(NavigationItem)).toHaveLength(3)
     });
-
-
-
-
 });

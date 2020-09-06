@@ -1,6 +1,5 @@
 import * as actionTypes from './actionTypes';
-import axios from '../../axionOrder';
-import { initIngredient } from './actionBurgerBuilder';
+
 
 export const purchaseBurgerInit = () => {
     return {
@@ -29,17 +28,11 @@ export const purchaseBurgerStart = () => {
     }
 }
 
-export const sendPurchaseBurger = (orderData) => {
-    return (dispatch,getState) => { 
-        dispatch(purchaseBurgerStart());
-        let token = getState().auth.token;
-        axios.post('/order.json?auth=' + token , orderData)
-            .then(res => {
-                dispatch(purchaseBurgerSuccess(res.data.name, orderData));
-                dispatch(initIngredient())
-            }).catch(error => {
-                dispatch(purchaseBurgerFail(error))
-            })
+export const sendPurchaseBurger = (orderData, token) => {
+    return {
+        type: actionTypes.CALL_SEND_PURCHASE_BURGER_SAGA,
+        token: token,
+        orderData: orderData
     }
 }
 
@@ -61,19 +54,9 @@ export const fetchOrderFail = (error) => {
     }
 }
 export const fetchOrder = ( token,userId ) => {
-    return dispatch => {
-        dispatch( fetchOrderStart() );
-        const queryParams = '?auth=' + token + '&orderBy="userId"&equalTo="'+ userId +'"';
-        axios.get('order.json'+ queryParams)
-        .then(res => {
-            let fetchOrders = [];
-            for (let key in res.data) {
-                fetchOrders.push({ ...res.data[key], id: key })
-            }
-            dispatch( fetchOrderSuccess(fetchOrders) )
-        })
-        .catch(error => {
-            dispatch( fetchOrderFail(error) )
-        })
+    return {
+        type: actionTypes.CALL_FETCH_ORDER_SAGA,
+        token: token,
+        userId: userId
     }
 }

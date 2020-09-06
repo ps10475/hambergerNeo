@@ -1,5 +1,5 @@
 import * as actionTypes from './actionTypes';
-import axios from 'axios';
+ 
 
 export const authStart = () => {
     return {
@@ -21,45 +21,30 @@ export const authFail = (error) => {
 }
 
 export const authLogout = () => {
-    localStorage.clear()
+    return {
+        type: actionTypes.CALL_AUTH_LOGOUT_SAGA
+    }
+}
+export const authLogoutSuccessed = () => {
     return {
         type: actionTypes.AUTH_LOGOUT
     }
 }
 
 export const checkAuthTimeout = (expiresTime) => {
-    return dispatch => {
-        setTimeout(() => {
-            dispatch(authLogout())
-        }, expiresTime );
+    return {
+        type: actionTypes.CALL_CHECK_AUTH_TIMEOUT_SAGA,
+        expiresTime: expiresTime
     }
 }
 
 
 export const auth = (email, password, isSignin) => {
-    return dispatch => {
-        dispatch(authStart());
-        const authData = {
-            email: email,
-            password: password,
-            returnSecureToken: true
-        }
-        let url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDfFNa0ixZH_tSPT98xcFx4HxK97MKcVN8';
-        if (isSignin) {
-            url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDfFNa0ixZH_tSPT98xcFx4HxK97MKcVN8'
-        }
-        axios.post(url, authData)
-            .then(response => {
-                localStorage.setItem('token', response.data.idToken);
-                let expiresDate = new Date(new Date().getTime() + response.data.expiresIn * 1000);
-                localStorage.setItem('expiresDate', expiresDate);
-                localStorage.setItem('userId', response.data.localId)
-                dispatch(authSuccess(response.data.idToken, response.data.localId));
-                dispatch(checkAuthTimeout(response.data.expiresIn * 1000));
-            })
-            .catch(error => {
-                dispatch(authFail(error.response.data.error.message))
-            })
+    return {
+        type: actionTypes.CALL_AUTH_SAGA,
+        email: email,
+        password: password,
+        isSignin: isSignin
     }
 
 }
@@ -72,16 +57,7 @@ export const setRedirectPath = (path) => {
 }
 
 export const checkAuth = () => {
-    return dispatch => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            dispatch(authLogout());
-        } else {
-            const userId = localStorage.getItem('userId');
-            dispatch(authSuccess(token, userId))
-            const expiresDate = localStorage.getItem('expiresDate');
-            dispatch(checkAuthTimeout(new Date(expiresDate).getTime() - new Date().getTime()))
-        }
-
+    return{
+        type: actionTypes.CALL_CHECK_AUTH_SAGA
     }
 }

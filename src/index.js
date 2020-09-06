@@ -6,12 +6,21 @@ import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
-// import reducer from './Store/Reducers/burgerBuilderReducer';
+import createSagaMiddlewear from 'redux-saga';
 import thunk from 'redux-thunk';
+
 import { rootReducer } from './Store/Reducers/rootReducer';
+import {watchAuthSaga, watchBurgerBuilderSaga, watchOrderSaga} from './Store/Saga/';
 
 const composeEnhancers = process.env.NODE_ENV === "development" ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null || compose;
-const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)))
+const sagaMiddlewear = createSagaMiddlewear();
+
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk, sagaMiddlewear)));
+
+sagaMiddlewear.run(watchAuthSaga);
+sagaMiddlewear.run(watchBurgerBuilderSaga);
+sagaMiddlewear.run(watchOrderSaga)
+
 
 ReactDOM.render(
   <Provider store={store}>
